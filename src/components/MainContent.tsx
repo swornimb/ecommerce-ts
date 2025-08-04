@@ -58,6 +58,23 @@ const MainContent = ()=>{
         return filteredProducts;
     }
   }
+  const handlePageChange = (page: number) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginationButtons = ()=>{
+    const buttons: number[] = [];
+    let startButton = Math.max(1, currentPage-2)
+    let lastButton = Math.min(totalPages, currentPage+2)
+    
+    for(let i = startButton; i<=lastButton; i++){
+        buttons.push(i)
+    }
+    return buttons
+  }
+
   const filteredProducts = filteredProduct();
      return (
     <section className="xl:w-[55rem] lg:w-[55rem] sm:w-[40rem] xs:w-[20rem] p-5">
@@ -95,16 +112,48 @@ const MainContent = ()=>{
           </div>
         </div>
 
-        <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 gap-5">
-          {filteredProducts.map((product) => (
-            <BookCard
-              key={product.id}
-              id={product.id}
-              title={product.title}
-              image={product.thumbnail}
-              price={product.price}
-            />
-          ))}
+            <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 gap-5">
+            {filteredProducts.map((product) => (
+                <BookCard
+                key={product.id}
+                id={product.id}
+                title={product.title}
+                image={product.thumbnail}
+                price={product.price}
+                />
+            ))}
+            </div>
+
+             <div className="flex flex-col sm:flex-row justify-between items-center mt-5">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="border px-4 py-2 mx-2 rounded-full"
+          >
+            Previous
+          </button>
+          
+          <div className="flex flex-wrap justify-center">
+            {paginationButtons().map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`border px-4 py-2 mx-1 rounded-full ${
+                  page === currentPage ? "bg-black text-white" : ""
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+          
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="border px-4 py-2 mx-2 rounded-full"
+          >
+            Next
+          </button>
         </div>
         </div>
     </section>
